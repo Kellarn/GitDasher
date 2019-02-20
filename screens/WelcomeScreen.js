@@ -1,16 +1,22 @@
 import React, { Component } from 'react'
 import {View, Text, Button} from 'react-native'
+import {Expo, AuthSession} from 'expo'
+import WelcomeSlides from '../components/WelcomeSlides'
+
+const SLIDE_DATA = [
+  { text: 'Welcome to GitDasher', color: '#03A9F4' },
+  { text: 'View and controll you github repos', color: '#009688' },
+  { text: 'Choose what you want to see to personalize your experience', color: '#03A9F4' }
+]
 
 class WelcomeScreen extends Component {
+  onSlidesComplete = () => {
+    this.props.navigation.navigate('Auth')
+  }
   render () {
+    // console.log(AuthSession.getRedirectUrl())
     return (
-      <View>
-        <Text>WelcomeScreen</Text>
-        <Button
-          title='Go to Auth'
-          onPress={() => this.props.navigation.navigate('Auth')}
-        />
-      </View>
+      <WelcomeSlides data={SLIDE_DATA} onComplete={this.onSlidesComplete} />
     )
   }
 }

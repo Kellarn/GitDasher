@@ -3,16 +3,17 @@ import {View, Text, StyleSheet, Button} from 'react-native'
 
 class SettingsScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    // const { state } = navigation
     return {
       title: 'Github settings',
       headerRight:
-      <Button 
-      title="Notifications" 
-      onPress={ () => navigation.navigate('Notifications') } 
-      />
+        <Button
+          title="Notifications"
+          onPress={() => navigation.navigate('Notifications')}
+          backgroundColor="rgba(0,0,0,0)"
+          color="rgba(0, 122, 255, 1)"
+        />
     }
-    }
+  }
   render () {
     return (
       <View style={styles.container}>
