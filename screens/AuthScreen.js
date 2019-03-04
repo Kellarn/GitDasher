@@ -1,18 +1,33 @@
 import React, { Component } from 'react'
-import {View, Text, Button} from 'react-native'
+import {View, Text, Button, AsyncStorage} from 'react-native'
+import { connect } from 'react-redux'
+import * as actions from '../actions'
 
 class AuthScreen extends Component {
+  componentDidMount () {
+    this.props.githubLogin()
+    this.onAuthComplete(this.props)
+    AsyncStorage.removeItem('gh_token')
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.onAuthComplete(nextProps)
+  }
+
+  onAuthComplete (props) {
+    if (props.token) {
+      this.props.navigation.navigate('Flow')
+    }
+  }
   render () {
     return (
-      <View>
-        <Text>AuthScreen</Text>
-        <Button
-          title='Go to Dashboard'
-          onPress={() => this.props.navigation.navigate('Dashboard')}
-        />
-      </View>
+      <View />
     )
   }
 }
 
-export default AuthScreen
+function mapStateToProps ({ auth }) {
+  return { token: auth.token }
+}
+
+export default connect(mapStateToProps, actions)(AuthScreen)

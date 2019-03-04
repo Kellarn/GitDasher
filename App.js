@@ -16,31 +16,29 @@ class IconWithBadge extends React.Component {
   render () {
     const { name, badgeCount, color, size } = this.props
     return (
-      <Provider store={store}>
-        <View style={{ width: 24, height: 24, margin: 5 }}>
-          <Ionicons name={name} size={size} color={color} />
-          {badgeCount > 0 && (
-            <View
-              style={{
+      <View style={{ width: 24, height: 24, margin: 5 }}>
+        <Ionicons name={name} size={size} color={color} />
+        {badgeCount > 0 && (
+        <View
+          style={{
                 // /If you're using react-native < 0.57 overflow outside of the parent
                 // will not work on Android, see https://git.io/fhLJ8
-                position: 'absolute',
-                right: -6,
-                top: -3,
-                backgroundColor: 'red',
-                borderRadius: 6,
-                width: 12,
-                height: 12,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-              <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
-                {badgeCount}
-              </Text>
-            </View>
-          )}
+            position: 'absolute',
+            right: -6,
+            top: -3,
+            backgroundColor: 'red',
+            borderRadius: 6,
+            width: 12,
+            height: 12,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
+            {badgeCount}
+          </Text>
         </View>
-      </Provider>
+          )}
+      </View>
     )
   }
 }
@@ -67,7 +65,7 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   } else if (routeName === 'Flow') {
     iconName = 'ios-code-download'
   } else if (routeName === 'Dashboard') {
-    iconName = 'ios-github'
+    iconName = 'ios-add'
   } else if (routeName === 'Notifications') {
     iconName = 'ios-switch'
   }
@@ -79,34 +77,60 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
 const WelcomeStack = createBottomTabNavigator({
   Welcome: { screen: WelcomeScreen },
   Auth: { screen: AuthScreen }
-})
-
-const DashboardStack = createBottomTabNavigator({
-  Flow: {screen: GithubFlowScreen},
-  Dashboard: { screen: DashboardScreen }
-})
+},
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarVisible: false
+    })
+  })
 
 const SettingsStack = createStackNavigator({
   Settings: { screen: SettingsScreen },
   Notifications: { screen: NotiSettingsScreen }
 })
 
-export default createAppContainer(
-  createBottomTabNavigator(
-    {
-      Welcome: WelcomeStack,
-      DashBoard: DashboardStack,
-      Settings: SettingsStack
-    },
-    {
-      defaultNavigationOptions: ({ navigation }) => ({
-        tabBarIcon: ({ focused, tintColor }) =>
-          getTabBarIcon(navigation, focused, tintColor)
-      }),
-      tabBarOptions: {
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray'
-      }
+const DashboardStack = createBottomTabNavigator({
+  Flow: {screen: GithubFlowScreen},
+  Dashboard: { screen: DashboardScreen },
+  Settings: SettingsStack
+},
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) =>
+        getTabBarIcon(navigation, focused, tintColor)
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray'
     }
-  )
-)
+  })
+
+const RootStack = createBottomTabNavigator(
+  {
+    Welcome: WelcomeStack,
+    DashBoard: DashboardStack,
+    Settings: SettingsStack
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarVisible: false,
+      tabBarIcon: ({ focused, tintColor }) =>
+          getTabBarIcon(navigation, focused, tintColor)
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray'
+    },
+    lazy: true
+  })
+const AppContainer = createAppContainer(RootStack)
+
+export default class App extends React.Component {
+  render () {
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    )
+  }
+}

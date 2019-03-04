@@ -11,7 +11,7 @@ const SLIDE_DATA = [
 
 class WelcomeScreen extends Component {
   onSlidesComplete = () => {
-    this.props.navigation.navigate('Auth')
+    this.props.navigation.navigate('Dash')
   }
   render () {
     // console.log(AuthSession.getRedirectUrl())
