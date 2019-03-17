@@ -1,5 +1,5 @@
-import { AsyncStorage } from 'react-native'
-import { AuthSession } from 'expo'
+
+import { AuthSession, SecureStore } from 'expo'
 import credentials from '../credentials'
 import {
     GITHUB_LOGIN_SUCCESS,
@@ -51,7 +51,7 @@ const doGithubLogin = async dispatch => {
     scope,
     access_token
   })
-  // await AsyncStorage.setItem('gh_token', access_token)
+  await SecureStore.setItemAsync('gh_token', access_token)
   dispatch({ type: GITHUB_LOGIN_SUCCESS, payload: access_token })
 }
 
@@ -69,12 +69,12 @@ const createTokenWithCode = async code => {
       'Content-Type': 'application/json'
     }
   })
-
   return res.json()
 }
 
 export const githubLogin = () => async dispatch => {
-  let token = await AsyncStorage.getItem('gh_token')
+  let token = await SecureStore.getItemAsync('gh_token')
+  // console.log(token)
   if (token) {
               // Dispatch an action for Github login is done.
     dispatch({ type: GITHUB_LOGIN_SUCCESS, payload: token })

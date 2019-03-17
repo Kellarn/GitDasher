@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons'
 import { Provider } from 'react-redux'
+import {Permissions, Notifications} from 'expo'
 
 import store from './store'
 import AuthScreen from './screens/AuthScreen'
@@ -126,6 +127,9 @@ const RootStack = createBottomTabNavigator(
 const AppContainer = createAppContainer(RootStack)
 
 export default class App extends React.Component {
+  // registerForPushNotificationsAsync = async () => {
+  //   const { status: exisit}
+  // }
   render () {
     return (
       <Provider store={store}>

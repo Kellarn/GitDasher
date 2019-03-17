@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, Text, Button} from 'react-native'
+import {View, Text, Button, AsyncStorage} from 'react-native'
 import {Expo, AuthSession} from 'expo'
 import WelcomeSlides from '../components/WelcomeSlides'
 
@@ -11,7 +11,8 @@ const SLIDE_DATA = [
 
 class WelcomeScreen extends Component {
   onSlidesComplete = () => {
-    this.props.navigation.navigate('Dash')
+    // AsyncStorage.removeItem('gh_token') 
+    this.props.navigation.navigate('Dashboard')
   }
   render () {
     // console.log(AuthSession.getRedirectUrl())
