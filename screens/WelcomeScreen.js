@@ -11,11 +11,9 @@ const SLIDE_DATA = [
 
 class WelcomeScreen extends Component {
   onSlidesComplete = () => {
-    // AsyncStorage.removeItem('gh_token') 
-    this.props.navigation.navigate('Dashboard')
+    this.props.navigation.navigate('Auth')
   }
   render () {
-    // console.log(AuthSession.getRedirectUrl())
     return (
       <WelcomeSlides data={SLIDE_DATA} onComplete={this.onSlidesComplete} />
     )

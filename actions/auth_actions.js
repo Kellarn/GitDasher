@@ -74,7 +74,7 @@ const createTokenWithCode = async code => {
 
 export const githubLogin = () => async dispatch => {
   let token = await SecureStore.getItemAsync('gh_token')
-  // console.log(token)
+  console.log(token)
   if (token) {
               // Dispatch an action for Github login is done.
     dispatch({ type: GITHUB_LOGIN_SUCCESS, payload: token })

@@ -1,27 +1,30 @@
 import React, { Component } from 'react'
-import {View, Text, Button, AsyncStorage} from 'react-native'
+import {View, Text, Button, AsyncStorage, ActivityIndicator} from 'react-native'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
+import firebase from 'firebase'
 
 class AuthScreen extends Component {
+  checkIfLoggedIn = () => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        console.log('Hello Dash')
+        this.props.navigation.navigate('Dashboard')
+      } else {
+        console.log('Hello Login')
+        this.props.navigation.navigate('Login')
+      }
+    })
+  }
   componentDidMount () {
-    this.props.githubLogin()
-    this.onAuthComplete(this.props)
-    AsyncStorage.removeItem('gh_token')
+  this.checkIfLoggedIn()
   }
 
-  componentWillReceiveProps (nextProps) {
-    this.onAuthComplete(nextProps)
-  }
-
-  onAuthComplete (props) {
-    if (props.token) {
-      this.props.navigation.navigate('Flow')
-    }
-  }
   render () {
     return (
-      <View />
+      <View>
+      <ActivityIndicator size="large"></ActivityIndicator>
+      </View>
     )
   }
 }

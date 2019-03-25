@@ -9,7 +9,7 @@ class WelcomeSlides extends Component {
     if (index === this.props.data.length - 1) {
       return (
         <Button
-          title='Onward!'
+          title='Login!'
           raised
           buttonStyle={styles.buttonStyle}
           onPress={this.props.onComplete} />

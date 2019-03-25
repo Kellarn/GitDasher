@@ -6,9 +6,9 @@ import {
 export default function (state = {}, action) {
   switch (action.type) {
     case GITHUB_GETREPO_SUCCESS:
-      return { repoData: action.payload }
+      return { orgRepoData: action.payload }
     case GITHUB_GETREPO_FAILED:
-      return { repoData: null }
+      return { orgRepoData: null }
     default:
       return state
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, YellowBox } from 'react-native'
 import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons'
 import { Provider } from 'react-redux'
@@ -12,6 +12,21 @@ import GithubFlowScreen from './screens/GithubFlowScreen'
 import DashboardScreen from './screens/DashboardScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import NotiSettingsScreen from './screens/NotiSettingsScreen'
+import LoginScreen from './screens/LoginScreen'
+
+import _ from 'lodash'
+import firebase from 'firebase'
+import credentials from './credentials'
+
+YellowBox.ignoreWarnings(['Setting a timer'])
+const _console = _.clone(console)
+console.warn = message => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    _console.warn(message)
+  }
+}
+
+firebase.initializeApp(credentials.firebase)
 
 class IconWithBadge extends React.Component {
   render () {
@@ -77,7 +92,8 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
 
 const WelcomeStack = createBottomTabNavigator({
   Welcome: { screen: WelcomeScreen },
-  Auth: { screen: AuthScreen }
+  Auth: { screen: AuthScreen },
+  Login: { screen: LoginScreen }
 },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -127,9 +143,6 @@ const RootStack = createBottomTabNavigator(
 const AppContainer = createAppContainer(RootStack)
 
 export default class App extends React.Component {
-  // registerForPushNotificationsAsync = async () => {
-  //   const { status: exisit}
-  // }
   render () {
     return (
       <Provider store={store}>

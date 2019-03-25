@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import {View, Text, StyleSheet, Button} from 'react-native'
+import firebase from 'firebase'
+import { SecureStore } from 'expo'
+
 
 class SettingsScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -14,10 +17,25 @@ class SettingsScreen extends Component {
         />
     }
   }
+  // componentDidMount() {
+  //   let token = SecureStore.getItemAsync('gh_token')
+  //   console.log(token)
+  // }
+   logout = async () => {
+
+    try {
+      await SecureStore.deleteItemAsync('gh_token')
+    } catch(error) {
+      console.log(error)
+    }
+    firebase.auth().signOut()
+    this.props.navigation.navigate('LoginScreen') 
+  }
   render () {
     return (
       <View style={styles.container}>
-        <Text>SettingsScreen</Text> 
+        <Text>SettingsScreen</Text>
+        <Button title="Logout" onPress={this.logout}></Button>
       </View>
     )
   }
