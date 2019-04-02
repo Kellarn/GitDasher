@@ -1,71 +1,44 @@
 const functions = require('firebase-functions')
-import * as Expo from 'expo-server-sdk'
+var fetch = require('node-fetch')
+
 const admin = require('firebase-admin')
-admin.initializeApp()
-let expo = new Expo()
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+admin.initializeApp(functions.config().firebase)
 
-exports.webhookPush = functions.https.onRequest((req, res) => {
-  if (req.method !== 'GET') {
-    return res.status(403).send('Forbidden!')
-  }
-  let userId = req.query.id
-  let body = JSON.parse(req.body.payload)
+// send the push notification
+exports.sendPushNotification = functions.https.onRequest((req, res) => {
+  var messages = []
 
-  if (req.headers['x-github-event'] === 'issues') {
-    const payload = {
-      data: {
-        action: body.action,
-        body: body.sender.login,
-        avatar: body.sender.avatar_url,
-        repository: body.repository.full_name
-      }
-    }
+    // return the main promise
+  return admin.database().ref('/users').once('value').then(function (snapshot) {
+    snapshot.forEach(function (childSnapshot) {
+      var expoToken = childSnapshot.val().push_token
 
-    // const root = event.data.ref.root
-    let allTokens = []
-    let messages = []
-
-    admin.database().ref('/all_user_push_tokens/').once('value', (snapshot) => {
-      if (!Expo.isExpoPushToken(snapshot.val())) {
-        allTokens.push(snapshot.val())
-      } else {
-        console.log(snapshot.val())
-      }
-    })
-  .then(() => {
-    for (var token in allTokens) {
       messages.push({
-        to: token,
-        sound: 'default',
-        title: 'NXET',
-        body: ' NEW ACTIVITIES ADDED!'
+        'to': expoToken,
+        'sound': 'default',
+        'body': 'New Note Added'
       })
-    }
+    })
+        // firebase.database then() respved a single promise that resolves
+        // once all the messages have been resolved
+    return Promise.all(messages)
+  })
+  .then(messages => {
+            // console.log(messages)
+    fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(messages)
+
+    })
   })
   .then(() => {
-    let chunks = expo.chunkPushNotifications(messages)
-
-    async (chunks) => {
-      for (let chunk of chunks) {
-        try {
-          await expo.sendPushNotificationsAsync(chunk)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-    }
-
     return res.status(200).send('SUCCESS - NOTIFICATIONS SENT!!')
   })
-  .catch(() => {
-    return res.status(403).send('Forbidden!')
+  .catch(reason => {
+    return res.status(403).send('Forbidden!' + reason)
   })
-    return res.status(200).send('Function Executing')
-  }
 })

@@ -1,32 +1,45 @@
 import React, { Component } from 'react'
-import {View, Text, AsyncStorage} from 'react-native'
+import {View, Text, AsyncStorage, ActivityIndicator, ScrollView} from 'react-native'
+import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
-import * as actions from '../actions'
+// import * as actions from '../actions'
+import { getCommits } from '../actions/org_repo_actions'
+import equal from 'fast-deep-equal'
+import { AppLoading } from 'expo';
+import CardComponent from '../components/CardComponent'
+// import reducers from '../reducers';
 
 class GithubFlowScreen extends Component {
   state = {
     currentOrgUrl: '',
   }
-  async componentDidMount () {
-    // this.props.getOrgRepos()
+  componentDidMount () {
+    this.props.getCommits()
+    // this.state.intervalId = setInterval(() => console.log(this.props.commits), 10000) 
     // let currentOrg = await AsyncStorage.getItem('currentOrg')
     // this.setState({currentOrgUrl: currentOrg})
     // console.log(currentOrg)
   }
+  componentDidUpdate(prevProps) {
+    if(!equal(this.commits, prevProps.commits)) 
+    {
+      this.render() //hello
+    }
+} 
   componentWillMount() {
     this.props.navigation.addListener('willBlur', () =>
       console.log('willBlur first')
-    );
+    )
     this.props.navigation.addListener('didBlur', () =>
       console.log('didBlur first')
-    );
+    )
     this.props.navigation.addListener('willFocus', () =>
-      this.props.getOrgRepos()
+      this.props.getCommits()
       // this.setState({currentOrgUrl: AsyncStorage.getItem('currentOrg')})
-    );
+    )
     this.props.navigation.addListener('didFocus', () =>
       console.log('didFocus first')
-    );
+    )
   }
   async shouldComponentUpdate () {
     // let currentOrg = await AsyncStorage.getItem('currentOrg') 
@@ -35,20 +48,37 @@ class GithubFlowScreen extends Component {
     // console.log(this.props.org)
   }
   render () {
-    return (
-      <View>
-        <Text>GithubFlowScreen</Text>
-        <Text>GithubFlowScreen</Text>
-        <Text>GithubFlowScreen</Text>
-        <Text>GithubFlowScreen</Text>
-        <Text>GithubFlowScreen</Text>
+    const {commits, loading} = this.props
+    console.log(loading, commits)
+    if(loading === true) {
+      return (
+        <View>
+         <ActivityIndicator size="large"></ActivityIndicator>
       </View>
-    )
+      )
+      // console.log('hello' + this.props.orgRepo.length)
+    } else if(loading === false) {
+      return ( 
+        <ScrollView style={{marginTop: 40}}>
+          {commits.length ? commits.map((commit, i) => <CardComponent key={i} githubInfo={commit}></CardComponent>): <Text>No commits</Text>}
+        </ScrollView>
+      )
+    } else {
+      return (
+        <View>
+         <ActivityIndicator size="large"></ActivityIndicator>
+      </View> 
+      )
+    }
   }
 }
 
-function mapStateToProps ({ org, orgRepo }) {
-  return {org: org.orgData, orgRepo: orgRepo.orgRepoData}
+const mapStateToProps = ({orgRepo})  => {
+  return {commits: orgRepo.orgRepoData,
+  loading: orgRepo.loading}
 }
-
-export default connect(mapStateToProps, actions)(GithubFlowScreen)
+const mapDispatchToProps = {
+  getCommits,
+}
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(GithubFlowScreen)

@@ -19,7 +19,7 @@ class LoginScreen extends Component {
     login = async () => {
         if (!this.props.token) {
             try {
-                await this.props.githubLogin()
+                await this.props.githubLogin() 
             } catch (error) {
                 console.log(error)
             }
@@ -58,7 +58,7 @@ class LoginScreen extends Component {
                 } else {
                     firebase
                         .database()
-                        .ref('/users/' + result.user.providerData[0].uid)
+                        .ref('/users/' + result.user.uid)
                         .update({
                             last_logged_in: Date.now()
                         });

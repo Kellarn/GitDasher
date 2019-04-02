@@ -48,10 +48,13 @@ class DashboardScreen extends Component {
       let token = await Notifications.getExpoPushTokenAsync();
 
       // POST the token to your backend server from where you can retrieve it to send push notifications.
+
+      var updates = {}
+      updates['/push_token'] = token
+
       firebase
         .database()
-        .ref('users/' + this.currentUser.uid + '/push_token') 
-        .set(token);
+        .ref('/users/' + this.currentUser.uid).update(updates)
     } catch (error) {
       console.log(error);
     }
