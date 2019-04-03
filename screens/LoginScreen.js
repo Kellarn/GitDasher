@@ -107,7 +107,7 @@ async function attemptAuth(token) {
     }
 }
 
-function mapStateToProps({ auth}) {
+function mapStateToProps({ auth }) {
     return { token: auth.token } 
 }
 

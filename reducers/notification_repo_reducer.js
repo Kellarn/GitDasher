@@ -25,22 +25,23 @@ const adminRepos = (state = initialState, action) => {
 }
 
 export const fetchAllAdminRepos = (bool) => {
+    console.log('Working?')
   return {
-    type: GITHUB_GETREPO_GETTING,
+    type: GITHUB_GETALLMYREPOS_GETTING,
     payload: bool
   }
 }
 export const fetchAllAdminReposFulfilled = (data) => {
   console.log('DONE!')
   return {
-    type: GITHUB_GETREPO_SUCCESS,
+    type: GITHUB_GETALLMYREPOS_SUCCESS,
     payload: data,
     loading: false
   }
 }
 export const fetchAllAdminReposRejected = (error) => {
   return {
-    type: GITHUB_GETREPO_FAILED,
+    type: GITHUB_GETALLMYREPOS_FAILED,
     payload: error,
     loading: false
   }

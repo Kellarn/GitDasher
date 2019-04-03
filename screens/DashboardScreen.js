@@ -98,7 +98,7 @@ class DashboardScreen extends Component {
       if(this.props.org) {
         // console.log(this.props.repo)
         return (
-          <View>
+          <View style={{marginTop: 50}}>
           <Picker
           mode="dropdown"
           placeholder="Pick an organization"

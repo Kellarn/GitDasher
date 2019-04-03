@@ -1,17 +1,20 @@
 import React, { Component } from 'react'
 import {View, Text, AsyncStorage, ActivityIndicator, ScrollView} from 'react-native'
-import firebase from 'firebase'
 import NotiListItem from '../components/NotiListItem'
 import { connect } from 'react-redux'
 import { getMyRepos } from '../actions/notification_repo_action'
 
-class NotiSettingsScreen extends Component {
+
+class NotiSettingsScreen extends Component { 
     static navigationOptions = {
         title: 'Settings'
     }
+    componentDidMount() {
+      this.props.getMyRepos()
+    }
   render () {
-    const {loading, allMyRepos} = this.props
-    console.log(loading, commits)
+    const {loading, adminRepos} = this.props
+    console.log(loading, adminRepos)
     if(loading === true) {
       return (
         <View>
@@ -21,8 +24,9 @@ class NotiSettingsScreen extends Component {
       // console.log('hello' + this.props.orgRepo.length)
     } else if(loading === false) {
       return ( 
-        <ScrollView style={{marginTop: 40}}>
-          {allMyRepos.length ? allMyRepos.map((allMyRepos, i) => <NotiListItem key={i} githubInfo={allMyRepos}></NotiListItem>): <Text>No commits</Text>}
+        <ScrollView style={{flex: 1, marginTop: 40}}>
+        <Text style={{fontSize: 30}}>Push notifications: </Text>
+          {adminRepos.length ? adminRepos.map((adminRepos, i) => <NotiListItem key={i} githubInfo={adminRepos}></NotiListItem>): <Text>No repos</Text>}
         </ScrollView>
       )
     } else {
@@ -35,7 +39,7 @@ class NotiSettingsScreen extends Component {
   }
 }
 
-const mapStateToProps = ({adminRepos})  => {
+const mapStateToProps = ({adminRepos}) => {
   return {adminRepos: adminRepos.adminRepos,
   loading: adminRepos.loading}
 }
@@ -43,4 +47,4 @@ const mapDispatchToProps = {
   getMyRepos,
 }
  
-export default connect(mapStateToProps, mapDispatchToProps)(GithubFlowScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(NotiSettingsScreen)

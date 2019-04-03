@@ -21,10 +21,6 @@ const githubFields = [
 ]
 
 const REDIRECT_URL = AuthSession.getRedirectUrl()
-// const AUTH_URL =
-//   'https://github.com/login/oauth/authorize' +
-//   `?client_id=${CLIENT_ID}` +
-//   `&redirect_uri=${encodeURIComponent(REDIRECT_URL)}`
 
 const authUrlWithId = (id, fields) => {
   return (
@@ -46,11 +42,6 @@ const doGithubLogin = async dispatch => {
 
   const code = params.code
   const { token_type, scope, access_token } = await createTokenWithCode(code)
-  console.log('getGithubTokenAsync: B: ', {
-    token_type,
-    scope,
-    access_token
-  })
   await SecureStore.setItemAsync('gh_token', access_token)
   dispatch({ type: GITHUB_LOGIN_SUCCESS, payload: access_token })
 }
@@ -74,7 +65,6 @@ const createTokenWithCode = async code => {
 
 export const githubLogin = () => async dispatch => {
   let token = await SecureStore.getItemAsync('gh_token')
-  console.log(token)
   if (token) {
               // Dispatch an action for Github login is done.
     dispatch({ type: GITHUB_LOGIN_SUCCESS, payload: token })
