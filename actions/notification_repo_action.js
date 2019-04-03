@@ -5,7 +5,6 @@ import { fetchAllAdminRepos, fetchAllAdminReposFulfilled, fetchAllAdminReposReje
 export const getMyRepos = () => {
   return async dispatch => {
     try {
-      console.log('hello')
       let token = await SecureStore.getItemAsync('gh_token')
 
       const res = await fetch('https://api.github.com/user/repos', {
@@ -29,10 +28,8 @@ export const getMyRepos = () => {
         const mappedReturnObject = { name: item.full_name, hooksUrl: item.hooks_url}
         return mappedReturnObject
       })
-      console.log(mappedRepos)
       dispatch(fetchAllAdminReposFulfilled(mappedRepos))
     } catch (error) {
-      console.log(error)
       dispatch(fetchAllAdminReposRejected(error))
     }
   }

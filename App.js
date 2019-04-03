@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, YellowBox } from 'react-native'
 import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons'
 import { Provider } from 'react-redux'
-import {Permissions, Notifications} from 'expo'
 
 import store from './store'
 import AuthScreen from './screens/AuthScreen'
@@ -37,8 +36,6 @@ class IconWithBadge extends React.Component {
         {badgeCount > 0 && (
         <View
           style={{
-                // /If you're using react-native < 0.57 overflow outside of the parent
-                // will not work on Android, see https://git.io/fhLJ8
             position: 'absolute',
             right: -6,
             top: -3,
@@ -60,7 +57,6 @@ class IconWithBadge extends React.Component {
 }
 
 const HomeIconWithBadge = props => {
-  // You should pass down the badgeCount in some other ways like context, redux, mobx or event emitters.
   return <IconWithBadge {...props} badgeCount={1} />
 }
 
@@ -70,7 +66,6 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   let iconName
   if (routeName === 'Welcome') {
     iconName = `ios-information-circle${focused ? '' : '-outline'}`
-    // We want to add badges to home tab icon
     IconComponent = HomeIconWithBadge
   } else if (routeName === 'Auth') {
     iconName = `ios-help-circle${focused ? '' : '-outline'}`

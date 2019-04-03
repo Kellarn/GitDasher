@@ -1,6 +1,6 @@
 import React, { Component} from 'react'
-import {View, Text, Image} from 'react-native'
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
+import { Text } from 'react-native'
+import { Card } from 'react-native-elements'
 
 class CardComponent extends Component {
   constructor (props) {
@@ -24,9 +24,5 @@ class CardComponent extends Component {
     )
   }
 }
-
-// function mapStateToProps ({ githubInfo }) {
-//   return {githubInfo: githubInfo}
-// }
 
 export default CardComponent

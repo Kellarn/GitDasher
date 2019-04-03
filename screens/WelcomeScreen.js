@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import {View, Text, Button, AsyncStorage} from 'react-native'
-import {Expo, AuthSession} from 'expo'
 import WelcomeSlides from '../components/WelcomeSlides'
 
 const SLIDE_DATA = [

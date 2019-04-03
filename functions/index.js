@@ -1,17 +1,19 @@
+
 const functions = require('firebase-functions')
+const admin = require('firebase-admin')
 var fetch = require('node-fetch')
 
-const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
 
 // send the push notification
-exports.sendPushNotification = functions.https.onRequest((req, res) => {
+exports.sendPushNotification = functions.database.ref('contacts/').onCreate(event => {
+  const root = event.data.ref.root
   var messages = []
 
     // return the main promise
-  return admin.database().ref('/users').once('value').then(function (snapshot) {
+  return root.child('/users').once('value').then(function (snapshot) {
     snapshot.forEach(function (childSnapshot) {
-      var expoToken = childSnapshot.val().push_token
+      var expoToken = childSnapshot.val().expoToken
 
       messages.push({
         'to': expoToken,
@@ -23,22 +25,19 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
         // once all the messages have been resolved
     return Promise.all(messages)
   })
-  .then(messages => {
+        .then(messages => {
             // console.log(messages)
-    fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(messages)
+          fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messages)
 
-    })
-  })
-  .then(() => {
-    return res.status(200).send('SUCCESS - NOTIFICATIONS SENT!!')
-  })
-  .catch(reason => {
-    return res.status(403).send('Forbidden!' + reason)
-  })
+          })
+        })
+        .catch(reason => {
+          console.log(reason)
+        })
 })

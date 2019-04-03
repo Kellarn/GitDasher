@@ -17,12 +17,7 @@ class SettingsScreen extends Component {
         />
     }
   }
-  // componentDidMount() {
-  //   let token = SecureStore.getItemAsync('gh_token')
-  //   console.log(token)
-  // }
    logout = async () => {
-
     try {
       await SecureStore.deleteItemAsync('gh_token')
     } catch(error) {
